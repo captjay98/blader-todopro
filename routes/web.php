@@ -2,7 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\TodoController;
+use App\Models\Todo;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,7 +20,7 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('dashboard', ['todos' => Todo::take(6)->get()]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -28,4 +29,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+// Route::get('/todos', function () {
+//     $todos = ['Learn Laravel', 'Learn Blade', 'Build Cool Stuff'];
+//     return view('todos', ['todos' => $todos]);
+// });
+
+Route::resource('todos', TodoController::class);
+
+require __DIR__ . '/auth.php';
